@@ -13,12 +13,12 @@ void main_menu(){
 	    printf("|        Inventory Management System (BST)       |\n");
 	    printf("|------------------------------------------------|\n");
 	    printf("| [1] Stock Management                           |\n");
-	    printf("| [2] Report and analize                         |\n");
+	    printf("| [2] View Stock                                 |\n");
 	    printf("|                                                |\n");
 		printf("| [3] Cashier                                    |\n");
 		printf("| [4] Leaderboard                                |\n");
-		printf("| [5] Settings                                   |\n");
 		printf("|                                                |\n");
+		printf("| [8] Settings                                   |\n");
 		printf("| [9] Logout                                     |\n");
 		printf("| [0] Exit                                       |\n");
 	    printf("+------------------------------------------------+\n");
