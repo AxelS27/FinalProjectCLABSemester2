@@ -29,10 +29,8 @@ void main_menu(){
         
         switch (choice) {
             case 1:
-                printf("Menambah bahan...\n");
                 break;
             case 2:
-                printf("Menampilkan laporan stok...\n");
                 break;
             case 0:
                 printf("Data successfully stored. Exiting...\n\n");
