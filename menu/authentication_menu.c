@@ -99,7 +99,7 @@ void register_user() {
     fclose(file);
 
     char profile_path[100];
-    sprintf(profile_path, "database/profiles/%s_file.txt", new_user.username);
+    sprintf(profile_path, "database/profiles/user/%s_file.txt", new_user.username);
 
     FILE *profile_file = fopen(profile_path, "w");
     if (profile_file) {
@@ -115,7 +115,7 @@ void register_user() {
     authentication_menu();
 }
 
-int login_user() {
+char* login_user(char *out_username) {
     FILE *file = fopen("database/authentication.bin", "rb");
 
     struct User user;
@@ -139,6 +139,7 @@ int login_user() {
     while (fread(&user, sizeof(struct User), 1, file)) {
         if (strcmp(user.username, username) == 0 && strcmp(user.password, password) == 0) {
             found = 1;
+            strcpy(out_username, username);
             break;
         }
     }
@@ -148,27 +149,30 @@ int login_user() {
     if (found) {
         printf("+----------------------------------------+\n");
         printf("-> Login success! Welcome, %s.\n\n", username);
-        return 1;
+        return out_username;
     } else {
         printf("+----------------------------------------+\n");
         printf("-> Username or password is incorrect !\n\n");
-
-        return 0;
+        return NULL;
     }
 }
 
+
 void authentication_menu() {
     int choice;
+    char logged_in_user[USERNAME_SIZE] = "";
 
     while (1) {
         system("clear");
         printf("+------------------------------------------------+\n");
         printf("|                STOCK UP CAFE                   |\n");
         printf("|------------------------------------------------|\n");
+        printf("|                                                |\n");
         printf("| [1] Login                                      |\n");
         printf("| [2] Register                                   |\n");
         printf("|                                                |\n");
         printf("| [0] Exit                                       |\n");
+        printf("|                                                |\n");
         printf("+------------------------------------------------+\n");
         printf(">> ");
 
@@ -181,23 +185,26 @@ void authentication_menu() {
         while (getchar() != '\n');
     }
 
-    int logged_in = 0;
     if (choice == 1) {
-        logged_in = login_user();
+        if (login_user(logged_in_user)) {
+            system("pause");
+            main_menu(logged_in_user);
+        } else {
+            system("pause");
+            authentication_menu();
+        }
     } else if (choice == 2) {
         register_user();
-        logged_in = login_user();
+        if (login_user(logged_in_user)) {
+            system("pause");
+            main_menu(logged_in_user);
+        } else {
+            system("pause");
+            authentication_menu();
+        }
     } else if (choice == 0) {
         printf("Good bye !.\n");
         exit(0);
-        return;
-    }
-
-    if (logged_in) {
-        system("pause");
-        main_menu();
-    } else {
-        system("pause");
-        authentication_menu();
     }
 }
+
