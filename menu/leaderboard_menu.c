@@ -1,14 +1,19 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+
+//=====[[ Custom Library ]]=====
 #include "../library/leaderboard_menu.h"
 
+//=====[[ Structure ]]=====
 typedef struct {
     char username[50];
     int customer_handled;
 } LeaderboardEntry;
 
+//=====[[ Procedure/Function ]]=====
 int load_profile_customer_handled(const char *filepath, LeaderboardEntry *entry) {
     FILE *fp = fopen(filepath, "r");
     if (!fp) return 0;

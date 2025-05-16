@@ -1,9 +1,12 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+//=====[[ Constant Variable ]]=====
 #define USERNAME_SIZE 50
 
+//=====[[ Structure ]]=====
 typedef struct {
     char username[USERNAME_SIZE];
     int customer_handled;
@@ -11,6 +14,7 @@ typedef struct {
     int text_color;
 } UserProfile;
 
+//=====[[ Procedure/Functions ]]=====
 void apply_color(int bg_color, int text_color) {
     printf("\033[0m");
     printf("\033[4%dm", bg_color);

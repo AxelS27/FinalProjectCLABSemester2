@@ -1,16 +1,19 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+//=====[[ Custom Library ]]=====
 #include "../library/main_menu.h"
 #include "../library/authentication_menu.h"
 #include "../library/cashier_menu.h"
 #include "../library/leaderboard_menu.h"
 #include "../library/settings_menu.h"
 
-
+//=====[[ Structure ]]=====
 UserProfile profile;
 
+//=====[[ Procedure/Function ]]=====
 void main_menu(const char *username){
     int choice;
     while (1) {

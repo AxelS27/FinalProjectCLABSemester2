@@ -1,19 +1,24 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
 
+//=====[[ Custom Library ]]=====
 #include "../library/cashier_menu.h"
 #include "../library/main_menu.h"
 
+//=====[[ Structure ]]=====
 Cart_Item cart[100];
 int cart_size;
 
+//=====[[ Member's Property ]]=====
 char member_name[50] = "notmember";
 int member_points = 0;
 bool is_member = false;
 
+//=====[[ Declare Procedure ]]=====
 void order(const char *username);
 void history(const char *username);
 void add_item(const char *username);
@@ -23,6 +28,7 @@ void confirm_order(const char *username);
 void already_member(const char *username);
 void create_member(const char *username);
 
+//=====[[ Procedure/Function ]]=====
 void cashier_menu(const char *username) {
     int choice;
     while (1) {

@@ -1,18 +1,23 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+//=====[[ Custom Library ]]=====
 #include "../library/authentication_menu.h"
 #include "../library/main_menu.h"
 
+//=====[[ Constant Variable ]]=====
 #define USERNAME_SIZE 50
 #define PASSWORD_SIZE 50
 
+//=====[[ Structure ]]=====
 struct User {
     char username[USERNAME_SIZE];
     char password[PASSWORD_SIZE];
 };
 
+//=====[[ Procedure/Function ]]=====
 void register_user() {
     FILE *file = fopen("database/authentication.bin", "ab");
     if (!file) {
@@ -29,7 +34,7 @@ void register_user() {
 
     while (getchar() != '\n');
 
-    system("clear");
+    system("cls");
     printf("+----------------------------------------+\n");
     printf("|             REGISTER PAGE              |\n");
     printf("+----------------------------------------+\n");
@@ -123,7 +128,7 @@ char* login_user(char *out_username) {
     int found = 0;
 
     while (getchar() != '\n'); 
-    system("clear");
+    system("cls");
     printf("+----------------------------------------+\n");
     printf("|              LOGIN PAGE                |\n");
     printf("+----------------------------------------+\n");
@@ -163,7 +168,7 @@ void authentication_menu() {
     char logged_in_user[USERNAME_SIZE] = "";
 
     while (1) {
-        system("clear");
+        system("cls");
         printf("+------------------------------------------------+\n");
         printf("|                STOCK UP CAFE                   |\n");
         printf("|------------------------------------------------|\n");
