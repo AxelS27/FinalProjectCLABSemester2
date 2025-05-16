@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../library/main_menu.h"
 #include "../library/authentication_menu.h"
@@ -7,11 +8,22 @@
 #include "../library/leaderboard_menu.h"
 #include "../library/settings_menu.h"
 
+
+UserProfile profile;
+
 void main_menu(const char *username){
     int choice;
-
     while (1) {
-        system("clear");
+	    if (!load_user_profile(username, &profile)) {
+		    strcpy(profile.username, username);
+		    profile.customer_handled = 0;
+		    profile.bg_color = 0;
+		    profile.text_color = 7;
+	    }
+	    
+		apply_color(profile.bg_color, profile.text_color);
+		
+        system("cls");
         printf("+------------------------------------------------+\n");
         printf("| User: %-10s                               |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
@@ -45,13 +57,20 @@ void main_menu(const char *username){
             	system("pause");
             	cashier_menu(username);
             	break;
+            case 8:
+            	printf("Loading settings menu...\n\n");
+            	system("pause");
+            	settings_menu(username);
+            	break;
             case 9:
             	printf("Logging out...\n\n");
             	system("pause");
             	authentication_menu();
+            	break;
             case 0:
                 printf("Data successfully stored. Exiting...\n\n");
                 system("pause");
+                printf("\033[0m");
                 exit(0);
                 break;
         }

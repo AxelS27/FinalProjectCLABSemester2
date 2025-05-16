@@ -9,3 +9,4 @@ Americano/5/15000,notmember, diskon:0
 Americano/5/15000,notmember, diskon:0
 Americano/5/15000,notmember, diskon:0
 Americano/5/15000,notmember, diskon:0
+Americano/5/15000,asdasd, diskon:0

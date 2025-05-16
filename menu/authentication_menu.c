@@ -103,7 +103,7 @@ void register_user() {
 
     FILE *profile_file = fopen(profile_path, "w");
     if (profile_file) {
-        fprintf(profile_file, "%s,%d\n", new_user.username, 0);
+		fprintf(profile_file, "%s,%d,%d,%d\n", new_user.username, 0, 0, 7);
         fclose(profile_file);
     }
 
@@ -153,11 +153,12 @@ char* login_user(char *out_username) {
         printf("+----------------------------------------+\n");
         printf("-> Username or password is incorrect !\n\n");
         return NULL;
-    }
+	}
 }
 
 
 void authentication_menu() {
+	printf("\033[0m");
     int choice;
     char logged_in_user[USERNAME_SIZE] = "";
 

@@ -1,3 +1,3 @@
 #pragma once
 
-void leaderboard_menu();
+//void leaderboard(const char *current_username)
