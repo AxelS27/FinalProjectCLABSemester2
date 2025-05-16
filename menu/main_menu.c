@@ -57,6 +57,11 @@ void main_menu(const char *username){
             	system("pause");
             	cashier_menu(username);
             	break;
+            case 4:
+            	printf("Loading leaderboard menu...\n\n");
+            	system("pause");
+            	leaderboard_menu(username);
+            	break;
             case 8:
             	printf("Loading settings menu...\n\n");
             	system("pause");

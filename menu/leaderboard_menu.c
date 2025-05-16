@@ -1,110 +1,120 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
+#include <dirent.h>
 #include "../library/leaderboard_menu.h"
-
 
 typedef struct {
     char username[50];
     int customer_handled;
-} UserStat;
+} LeaderboardEntry;
 
-int compare_asc(const void *a, const void *b) {
-    const UserStat *ua = (const UserStat *)a;
-    const UserStat *ub = (const UserStat *)b;
-    return ua->customer_handled - ub->customer_handled;
-}
-
-int compare_desc(const void *a, const void *b) {
-    const UserStat *ua = (const UserStat *)a;
-    const UserStat *ub = (const UserStat *)b;
-    return ub->customer_handled - ua->customer_handled;
-}
-
-void leaderboard(const char *current_username) {
-    UserStat users[1000];
-    int count = 0;
-
-    FILE *fp = fopen("database/profiles/users_list.txt", "r");
-    if (!fp) {
-        printf("Failed to open users_list.txt\n");
-        system("pause");
-        return;
-    }
+int load_profile_customer_handled(const char *filepath, LeaderboardEntry *entry) {
+    FILE *fp = fopen(filepath, "r");
+    if (!fp) return 0;
 
     char line[256];
-    while (fgets(line, sizeof(line), fp) && count < 1000) {
-        line[strcspn(line, "\r\n")] = 0;
-        if (strlen(line) == 0) continue;
-
+    if (fgets(line, sizeof(line), fp)) {
         char *token = strtok(line, ",");
-        if (!token) continue;
-        strcpy(users[count].username, token);
+        if (!token) { fclose(fp); return 0; }
+        strncpy(entry->username, token, sizeof(entry->username) - 1);
+        entry->username[sizeof(entry->username) - 1] = '\0';
 
         token = strtok(NULL, ",");
-        if (!token) continue;
-        users[count].customer_handled = atoi(token);
-
-        count++;
+        entry->customer_handled = token ? atoi(token) : 0;
+    } else {
+        fclose(fp);
+        return 0;
     }
     fclose(fp);
+    return 1;
+}
 
-    if (count == 0) {
-        printf("No users found.\n");
-        system("pause");
+void sort_leaderboard(LeaderboardEntry *entries, int count, int descending) {
+    for (int i = 1; i < count; i++) {
+        LeaderboardEntry key = entries[i];
+        int j = i - 1;
+        if (descending) {
+            while (j >= 0 && entries[j].customer_handled < key.customer_handled) {
+                entries[j + 1] = entries[j];
+                j--;
+            }
+        } else {
+            while (j >= 0 && entries[j].customer_handled > key.customer_handled) {
+                entries[j + 1] = entries[j];
+                j--;
+            }
+        }
+        entries[j + 1] = key;
+    }
+}
+
+void leaderboard_menu(const char *username) {
+    LeaderboardEntry entries[100];
+    int count = 0;
+
+    DIR *dir = opendir("database/profiles/user");
+    if (!dir) {
+        printf("Gagal membuka folder profiles/user.\n");
+        printf("Tekan Enter untuk kembali...");
+        getchar(); getchar();
         return;
     }
 
-    int sort_option = 0;
-    do {
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+            char path[256];
+            snprintf(path, sizeof(path), "database/profiles/user/%s", entry->d_name);
+            FILE *fp = fopen(path, "r");
+            if (fp) {
+                fclose(fp);
+                if (load_profile_customer_handled(path, &entries[count])) {
+                    count++;
+                    if (count >= 100) break;
+                }
+            }
+        }
+    }
+    closedir(dir);
+
+    int sort_desc = 1;
+
+    while (1) {
+        sort_leaderboard(entries, count, sort_desc);
         system("clear");
-        printf("+================ Leaderboard =================+\n");
-        printf("Sort by customer handled:\n");
-        printf("1. Ascending\n");
-        printf("2. Descending\n");
-        printf("0. Back\n");
+
+        printf("+---------------------------------------+\n");
+        printf("| User: %-10s                      |\n", username);
+        printf("|             LEADERBOARD               |\n");
+        printf("+---------------------------------------+\n");
+        printf("| Rank | Username       | Customers     |\n");
+        printf("+---------------------------------------+\n");
+        for (int i = 0; i < count; i++) {
+            printf("| %-4d | %-13s | %-13d  |\n", i + 1, entries[i].username, entries[i].customer_handled);
+        }
+        printf("+---------------------------------------+\n");
+		
+		printf("\n+=======================================+");
+        printf("\nSettings:\n\n");
+        printf("[1] Sorting Ascending\n");
+        printf("[2] Sorting Descending\n\n");
+        printf("[0] Back\n");
+        printf("+=======================================+\n");
         printf(">> ");
 
-        if (scanf("%d", &sort_option) != 1) {
+        int choice;
+        while (scanf("%d", &choice) != 1) {
             while (getchar() != '\n');
-            sort_option = -1;
         }
-        while (getchar() != '\n');
 
-        if (sort_option == 1) {
-            qsort(users, count, sizeof(UserStat), compare_asc);
-        } else if (sort_option == 2) {
-            qsort(users, count, sizeof(UserStat), compare_desc);
-        }
-    } while (sort_option != 0);
-
-    system("clear");
-    printf("+================ Leaderboard =================+\n");
-    printf(" Rank | Username                | Customers Handled\n");
-    printf("+------------------------------------------------+\n");
-    for (int i = 0; i < count; i++) {
-        printf(" %4d | %-22s | %17d\n", i + 1, users[i].username, users[i].customer_handled);
-    }
-    printf("+------------------------------------------------+\n");
-
-    int user_rank = -1;
-    for (int i = 0; i < count; i++) {
-        if (strcmp(users[i].username, current_username) == 0) {
-            user_rank = i + 1;
+        if (choice == 1) {
+            sort_desc = 0;
+        } else if (choice == 2) {
+            sort_desc = 1;
+        } else if (choice == 0) {
             break;
         }
     }
-
-    if (user_rank != -1) {
-        printf("Your rank: %d | Customers handled: %d\n",
-               user_rank, users[user_rank - 1].customer_handled);
-    } else {
-        printf("Your username '%s' not found in leaderboard.\n", current_username);
-    }
-
-    printf("\nPress Enter to return...");
-    getchar();
 }
+
