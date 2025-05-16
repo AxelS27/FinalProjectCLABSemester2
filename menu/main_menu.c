@@ -43,7 +43,7 @@ void main_menu(const char *username){
             case 3:
             	printf("Loading cashier menu...\n\n");
             	system("pause");
-            	cashier_menu();
+            	cashier_menu(username);
             	break;
             case 9:
             	printf("Logging out...\n\n");
@@ -57,4 +57,3 @@ void main_menu(const char *username){
         }
     }
 }
-

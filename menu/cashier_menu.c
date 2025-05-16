@@ -1,28 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "../library/cashier_menu.h"
 #include "../library/main_menu.h"
 
-Cart_Item cart[MAX_CART];
-int cart_size = 0;
+#define MAX_CART 100
 
+char member_name[50] = "notmember";
+int member_points = 0;
+bool is_member = false;
 
-void order();
-void history();
-void add_item();
-void remove_item();
-void member();
-void confirm_order();
-void already_member();
-void create_member();
+void order(const char *username);
+void history(const char *username);
+void add_item(const char *username);
+void remove_item(const char *username);
+void member(const char *username);
+void confirm_order(const char *username);
+void already_member(const char *username);
+void create_member(const char *username);
 
-void cashier_menu(){
-	int choice;
-	while (1) {
+void cashier_menu(const char *username) {
+    int choice;
+    while (1) {
         system("clear");
         printf("+------------------------------------------------+\n");
+        printf("| User: %-10s                               |\n", username);
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|                  Cashier Menu                  |\n");
         printf("|------------------------------------------------|\n");
@@ -31,7 +35,7 @@ void cashier_menu(){
         printf("| [2] History                                    |\n");
         printf("|                                                |\n");
         printf("| [0] Back                                       |\n");
-    	printf("|                                                |\n");
+        printf("|                                                |\n");
         printf("+------------------------------------------------+\n");
         printf(">> ");
 
@@ -40,24 +44,22 @@ void cashier_menu(){
         }
 
         switch (choice) {
-        	case 1:
-        		order();
-        		break;
-        	case 2:
-        		history();
-        		break;
-        	case 3:
-        		break;
-        	case 0:
-        		printf("Loading main menu...\n\n");
-        		system("pause");
-        		main_menu();
-        		break;
+            case 1:
+                order(username);
+                break;
+            case 2:
+                history(username);
+                break;
+            case 0:
+                printf("Loading main menu...\n\n");
+                system("pause");
+                main_menu(username);
+                return;
         }
-	}
+    }
 }
 
-void order(){
+void order(const char *username){
 	int choice;
 	while (1) {
         system("clear");
@@ -84,27 +86,27 @@ void order(){
 
         switch (choice) {
         	case 1:
-        		add_item();
+        		add_item(username);
         		break;
         	case 2:
-        		remove_item();
+        		remove_item(username);
         		break;
         	case 3:
-        		member();
+        		member(username);
         		break;
         	case 4:
-        		confirm_order();
+        		confirm_order(username);
         		break;
         	case 0:
         		printf("Loading cashier menu...\n\n");
         		system("pause");
-        		cashier_menu();
+        		cashier_menu(username);
         		break;
         }
 	}
 }
 
-void add_item() {
+void add_item(const char *username) {
     char item_name[30];
     int quantity;
 
@@ -118,7 +120,6 @@ void add_item() {
     printf("  Quantity    : ");
     scanf("%d", &quantity);
 
-    // Validasi dari item_stock.txt
     FILE *file = fopen("database/item_stock.txt", "r");
     if (file == NULL) {
         printf("Failed to open item_stock.txt!\n");
@@ -146,7 +147,6 @@ void add_item() {
         return;
     }
 
-    // Add to cart
     int found_in_cart = 0;
     for (int i = 0; i < cart_size; i++) {
         if (strcmp(cart[i].name, item_name) == 0) {
@@ -168,7 +168,7 @@ void add_item() {
 
 
 
-void remove_item() {
+void remove_item(const char *username) {
     char item_name[30];
     int quantity;
 
@@ -185,7 +185,6 @@ void remove_item() {
     for (int i = 0; i < cart_size; i++) {
         if (strcmp(cart[i].name, item_name) == 0) {
             if (quantity >= cart[i].quantity) {
-                // Remove item
                 for (int j = i; j < cart_size - 1; j++) {
                     cart[j] = cart[j + 1];
                 }
@@ -204,7 +203,7 @@ void remove_item() {
 }
 
 
-void member(){
+void member(const char *username){
 	int choice;
 	while (1) {
         system("clear");
@@ -227,23 +226,23 @@ void member(){
 
         switch (choice) {
         	case 1:
-        		already_member();
+        		already_member(username);
         		break;
         	case 2:
-        		create_member();
+        		create_member(username);
         		break;
         	case 3:
         		break;
         	case 0:
         		printf("Loading order menu...\n\n");
         		system("pause");
-        		order();
+        		order(username);
         		break;
         }
 	}
 }
 
-void already_member() {
+void already_member(const char *username) {
     char phone[20];
     FILE *fp = fopen("database/profiles/member/member_data.txt", "r");
     if (!fp) {
@@ -259,42 +258,44 @@ void already_member() {
     scanf(" %[^\n]", phone);
 
     char name[50], phone_data[20];
-    int found = 0;
-    while (fscanf(fp, "%[^,],%s\n", name, phone_data) != EOF) {
-        if (strcmp(phone, phone_data) == 0) {
-            found = 1;
-            break;
+    int points;
+    bool found = false;
+    char line[128];
+
+    while (fgets(line, sizeof(line), fp)) {
+        if (sscanf(line, "%[^,],%[^,],%d", name, phone_data, &points) == 3) {
+            printf("DEBUG: name='%s', phone_data='%s', points=%d\n", name, phone_data, points);
+
+            if (strcmp(phone, phone_data) == 0) {
+                found = true;
+                break;
+            }
         }
     }
     fclose(fp);
 
     if (found) {
-        printf("Member verified: %s\n", name);
+        strcpy(member_name, name);
+        member_points = points;
+        is_member = true;
+        printf("  >> Member verified: %s\n", member_name);
         system("pause");
-        order();
+        order(username);
     } else {
-        printf("Phone number not registered.\n\n");
+        printf("  >> Phone number not registered.\n\n");
         system("pause");
-        member();
+        member(username);
     }
 }
 
-
-void create_member() {
+void create_member(const char *username) {
     char name[50], phone[20];
-    FILE *fp = fopen("database/profiles/member/member_data.txt", "a");
-
-    if (!fp) {
-        printf("Failed to open member data.\n");
-        system("pause");
-        return;
-    }
+    FILE *fp;
 
     printf("+------------------------------------------------+\n");
     printf("|                Create Member Menu              |\n");
     printf("+------------------------------------------------+\n");
 
-    // Validasi nama
     while (1) {
         printf("  Input Name   : ");
         scanf("%s", name);
@@ -316,7 +317,6 @@ void create_member() {
         }
     }
 
-    // Validasi nomor telepon
     while (1) {
         printf("  No Handphone : ");
         scanf("%s", phone);
@@ -333,12 +333,46 @@ void create_member() {
 
         if (!valid) {
             printf("  >> Phone number must be 8–13 digits and numeric only.\n");
-        } else {
-            break;
+            continue;
         }
+
+        fp = fopen("database/profiles/member/member_data.txt", "r");
+        if (fp) {
+            char existing_name[50], existing_phone[20];
+            int existing_points;
+            int duplicate = 0;
+
+            while (fscanf(fp, "%[^,],%[^,],%d\n", existing_name, existing_phone, &existing_points) != EOF) {
+                if (strcmp(phone, existing_phone) == 0) {
+                    printf("  >> This phone number is already registered.\n");
+                    duplicate = 1;
+                    break;
+                }
+                if (strcmp(name, existing_name) == 0) {
+                    printf("  >> This name is already registered.\n");
+                    duplicate = 1;
+                    break;
+                }
+            }
+
+            fclose(fp);
+
+            if (duplicate) {
+                continue;
+            }
+        }
+
+        break;
     }
 
-    fprintf(fp, "%s,%s\n", name, phone);
+    fp = fopen("database/profiles/member/member_data.txt", "a");
+    if (!fp) {
+        printf("Failed to open member data.\n");
+        system("pause");
+        return;
+    }
+
+    fprintf(fp, "%s,%s,0\n", name, phone);
     fclose(fp);
 
     printf("\nMember created successfully!\n\n");
@@ -346,23 +380,28 @@ void create_member() {
 }
 
 
-void confirm_order() {
+void confirm_order(const char *username) {
     system("clear");
-    printf("+------------------------------------------------+\n");
-    printf("|                 STOCK UP CAFFEE                |\n");
-    printf("|                Confirm Order Menu              |\n");
-    printf("+------------------------------------------------+\n");
+    while (1) {
+        printf("+------------------------------------------------+\n");
+        printf("|                 STOCK UP CAFFEE                |\n");
+        printf("|                Confirm Order Menu              |\n");
+        printf("+------------------------------------------------+\n");
 
-    if (cart_size == 0) {
-        printf("  Cart is empty.\n");
-        system("pause");
-        return;
-    }
+        if (cart_size == 0) {
+            printf("  Cart is empty.\n");
+            system("pause");
+            return;
+        }
 
-    int grand_total = 0;
+        typedef struct {
+            int id, stock, price;
+            char name[30];
+        } StockItem;
 
-    for (int i = 0; i < cart_size; i++) {
-        // Cari harga item dari item_stock.txt
+        StockItem stock_items[100];
+        int stock_count = 0;
+
         FILE *fp = fopen("database/item_stock.txt", "r");
         if (!fp) {
             printf("Failed to open item_stock.txt\n");
@@ -371,36 +410,157 @@ void confirm_order() {
         }
 
         char line[100];
-        int id, stock, price, found = 0;
-        char name[30];
-
         while (fgets(line, sizeof(line), fp)) {
-            sscanf(line, "%d,%[^,],%d,%d", &id, name, &stock, &price);
-            if (strcmp(name, cart[i].name) == 0) {
-                int total_price = price * cart[i].quantity;
-                printf("  %-25s x%2d  @Rp%-6d  = Rp%-6d\n", name, cart[i].quantity, price, total_price);
-                grand_total += total_price;
-                found = 1;
-                break;
+            if (sscanf(line, "%d,%[^,],%d,%d", &stock_items[stock_count].id,
+                       stock_items[stock_count].name,
+                       &stock_items[stock_count].stock,
+                       &stock_items[stock_count].price) == 4) {
+                stock_count++;
+            }
+        }
+        fclose(fp);
+
+        int grand_total = 0;
+        for (int i = 0; i < cart_size; i++) {
+            for (int j = 0; j < stock_count; j++) {
+                if (strcmp(stock_items[j].name, cart[i].name) == 0) {
+                    int total_price = stock_items[j].price * cart[i].quantity;
+                    printf("  %-25s x%2d  @Rp%-6d  = Rp%-6d\n",
+                           cart[i].name, cart[i].quantity, stock_items[j].price, total_price);
+                    grand_total += total_price;
+                    break;
+                }
             }
         }
 
-        fclose(fp);
+        printf("--------------------------------------------------\n");
 
-        if (!found) {
-            printf("  %-25s x%2d  @Unknown Price\n", cart[i].name, cart[i].quantity);
+        int discount = 0;
+        int points_used = 0;
+        if (is_member) {
+            discount = (member_points / 3) * 10000;
+            if (discount > grand_total) {
+                discount = (grand_total / 10000) * 10000;
+            }
+            points_used = (discount / 10000) * 3;
+
+            printf("  Member : %s\n", member_name);
+            printf("  Points : %d\n", member_points);
+            printf("  Discount: Rp%d (used %d points)\n", discount, points_used);
+        }
+
+        printf("  Grand Total: Rp%d\n", grand_total - discount);
+        printf("--------------------------------------------------\n");
+        printf(" [1] Confirm\n");
+        printf(" [2] Back\n");
+        printf(" >> ");
+
+        int user_choice;
+        while (scanf("%d", &user_choice) != 1) {
+            while (getchar() != '\n');
+        }
+
+        if (user_choice == 1) {
+            if (is_member) {
+                member_points -= points_used;
+                int earned_points = (grand_total / 20000) * 3;
+                member_points += earned_points;
+
+                FILE *fp = fopen("database/profiles/member/member_data.txt", "r");
+                FILE *temp = fopen("database/profiles/member/temp.txt", "w");
+                if (!fp || !temp) {
+                    printf("Failed to update member data.\n");
+                    system("pause");
+                    return;
+                }
+
+                char name[50], phone[20];
+                int points;
+                while (fgets(line, sizeof(line), fp)) {
+                    if (sscanf(line, "%[^,],%[^,],%d", name, phone, &points) == 3) {
+                        if (strcmp(name, member_name) == 0) {
+                            fprintf(temp, "%s,%s,%d\n", name, phone, member_points);
+                        } else {
+                            fprintf(temp, "%s,%s,%d\n", name, phone, points);
+                        }
+                    }
+                }
+
+                fclose(fp);
+                fclose(temp);
+                remove("database/profiles/member/member_data.txt");
+                rename("database/profiles/member/temp.txt", "database/profiles/member/member_data.txt");
+            }
+
+            FILE *stock_fp = fopen("database/item_stock.txt", "w");
+            if (!stock_fp) {
+                printf("Failed to update stock.\n");
+                system("pause");
+                return;
+            }
+
+            for (int i = 0; i < stock_count; i++) {
+                for (int j = 0; j < cart_size; j++) {
+                    if (strcmp(stock_items[i].name, cart[j].name) == 0) {
+                        stock_items[i].stock -= cart[j].quantity;
+                        if (stock_items[i].stock < 0) stock_items[i].stock = 0;
+                    }
+                }
+                fprintf(stock_fp, "%d,%s,%d,%d\n", stock_items[i].id,
+                        stock_items[i].name, stock_items[i].stock, stock_items[i].price);
+            }
+            fclose(stock_fp);
+
+            FILE *hist = fopen("database/history_transaction.txt", "a");
+            if (hist) {
+                for (int i = 0; i < cart_size; i++) {
+                    for (int j = 0; j < stock_count; j++) {
+                        if (strcmp(stock_items[j].name, cart[i].name) == 0) {
+                            fprintf(hist, "%s/%d/%d,", cart[i].name, cart[i].quantity, stock_items[j].price);
+                            break;
+                        }
+                    }
+                }
+                fprintf(hist, "%s, diskon:%d\n", member_name, discount);
+                fclose(hist);
+            }
+
+            // ? Update customer_handled langsung tanpa temp
+            char path[100];
+            sprintf(path, "database/profiles/user/%s.txt", username);
+
+            FILE *userfp = fopen(path, "r+");
+            if (userfp) {
+                char uname[50];
+                int handled;
+
+                if (fscanf(userfp, "%[^,],%d", uname, &handled) == 2) {
+                    rewind(userfp);
+                    fprintf(userfp, "%s,%d\n", uname, handled + 1);
+                } else {
+                    printf("Failed to read user data format.\n");
+                }
+
+                fclose(userfp);
+            } else {
+                printf("Failed to open user file for handled update.\n");
+                system("pause");
+            }
+
+            printf("\nOrder confirmed!\n\n");
+            cart_size = 0;
+            system("pause");
+            cashier_menu(username);
+        } else if (user_choice == 2) {
+            order(username);
         }
     }
-
-    printf("--------------------------------------------------\n");
-    printf("  Grand Total: Rp%d\n", grand_total);
-    printf("--------------------------------------------------\n");
-
-    system("pause");
 }
 
-void history(){
-	
-}
 
+
+
+void history(const char *username) {
+    // To be implemented...
+}
 

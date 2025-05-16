@@ -1,2 +1,0 @@
-username,customer_handled
-Axel,0

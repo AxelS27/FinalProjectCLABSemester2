@@ -99,12 +99,11 @@ void register_user() {
     fclose(file);
 
     char profile_path[100];
-    sprintf(profile_path, "database/profiles/user/%s_file.txt", new_user.username);
+    sprintf(profile_path, "database/profiles/user/%s.txt", new_user.username);
 
     FILE *profile_file = fopen(profile_path, "w");
     if (profile_file) {
-        fprintf(profile_file, "username,customer_handled\n");
-        fprintf(profile_file, "%s,0\n", new_user.username);
+        fprintf(profile_file, "%s,%d\n", new_user.username, 0);
         fclose(profile_file);
     }
 
