@@ -132,27 +132,44 @@ void add_item(const char *username) {
 
     FILE *file = fopen("database/item_stock.txt", "r");
     if (file == NULL) {
-        printf("Failed to open item_stock.txt!\n");
+        printf("-> Failed to open item_stock.txt!\n");
         system("pause");
         return;
     }
 
     char line[100];
     int item_found = 0;
+    int stock = 0;
     while (fgets(line, sizeof(line), file)) {
-        int id, stock, price;
+        int id, file_stock, price;
         char name[30];
 
-        sscanf(line, "%d,%[^,],%d,%d", &id, name, &stock, &price);
+        sscanf(line, "%d,%[^,],%d,%d", &id, name, &file_stock, &price);
         if (strcmp(name, item_name) == 0) {
             item_found = 1;
+            stock = file_stock;
             break;
         }
     }
     fclose(file);
 
     if (!item_found) {
-        printf("Item not found in stock!\n");
+        printf("-> Item not found in stock!\n");
+        system("pause");
+        return;
+    }
+
+    int existing_quantity_in_cart = 0;
+    for (int i = 0; i < cart_size; i++) {
+        if (strcmp(cart[i].name, item_name) == 0) {
+            existing_quantity_in_cart = cart[i].quantity;
+            break;
+        }
+    }
+
+    int max_can_add = stock - existing_quantity_in_cart;
+    if (quantity > max_can_add) {
+        printf("-> Cannot add item. Only %d remaining in stock!\n", max_can_add);
         system("pause");
         return;
     }
@@ -172,7 +189,7 @@ void add_item(const char *username) {
         cart_size++;
     }
 
-    printf("Item added to cart!\n");
+    printf("-> Item added to cart!\n");
     system("pause");
 }
 
@@ -203,13 +220,13 @@ void remove_item(const char *username) {
             } else {
                 cart[i].quantity -= quantity;
             }
-            printf("Item removed from cart.\n");
+            printf("-> Item removed from cart.\n");
             system("pause");
             return;
         }
     }
 
-    printf("Item not found in cart.\n");
+    printf("-> Item not found in cart.\n");
     system("pause");
 }
 
@@ -258,7 +275,7 @@ void already_member(const char *username) {
     char phone[20];
     FILE *fp = fopen("database/profiles/member/member_data.txt", "r");
     if (!fp) {
-        printf("Failed to open member data.\n");
+        printf("-> Failed to open member data.\n");
         system("pause");
         return;
     }
@@ -289,11 +306,11 @@ void already_member(const char *username) {
         strcpy(member_name, name);
         member_points = points;
         is_member = true;
-        printf("  >> Member verified: %s\n", member_name);
+        printf("-> Member verified: %s\n", member_name);
         system("pause");
         order(username);
     } else {
-        printf("  >> Phone number not registered.\n\n");
+        printf("-> Phone number not registered.\n\n");
         system("pause");
         member(username);
     }
@@ -324,7 +341,7 @@ void create_member(const char *username) {
             }
 
             if (!valid) {
-                printf("  >> Name must be 3–10 characters and contain no spaces.\n");
+                printf("  -> Name must be 3–10 characters and contain no spaces.\n");
             } else {
                 break;
             }
@@ -345,7 +362,7 @@ void create_member(const char *username) {
             }
 
             if (!valid) {
-                printf("  >> Phone number must be 8–13 digits and numeric only.\n");
+                printf("-> Phone number must be 8–13 digits and numeric only.\n");
             } else {
                 break;
             }
@@ -359,12 +376,12 @@ void create_member(const char *username) {
 
             while (fscanf(fp, "%[^,],%[^,],%d\n", existing_name, existing_phone, &existing_points) != EOF) {
                 if (strcmp(phone, existing_phone) == 0) {
-                    printf("  >> This phone number is already registered.\n");
+                    printf("-> This phone number is already registered.\n");
                     duplicate = 1;
                     break;
                 }
                 if (strcmp(name, existing_name) == 0) {
-                    printf("  >> This name is already registered.\n");
+                    printf("-> This name is already registered.\n");
                     duplicate = 1;
                     break;
                 }
@@ -372,17 +389,14 @@ void create_member(const char *username) {
             fclose(fp);
         }
 
-        if (duplicate) {
-            printf("Please enter the details again.\n\n");
-            continue;
-        }
+        if (duplicate) continue;
 
         break;
     }
 
     fp = fopen("database/profiles/member/member_data.txt", "a");
     if (!fp) {
-        printf("Failed to open member data.\n");
+        printf("-> Failed to open member data.\n");
         system("pause");
         return;
     }
@@ -420,7 +434,7 @@ void confirm_order(const char *username) {
 
         FILE *fp = fopen("database/item_stock.txt", "r");
         if (!fp) {
-            printf("Failed to open item_stock.txt\n");
+            printf("-> Failed to open item_stock.txt\n");
             system("pause");
             return;
         }
@@ -485,7 +499,7 @@ void confirm_order(const char *username) {
                 FILE *fp = fopen("database/profiles/member/member_data.txt", "r");
                 FILE *temp = fopen("database/profiles/member/temp.txt", "w");
                 if (!fp || !temp) {
-                    printf("Failed to update member data.\n");
+                    printf("-> Failed to update member data.\n");
                     system("pause");
                     return;
                 }
@@ -510,7 +524,7 @@ void confirm_order(const char *username) {
 
             FILE *stock_fp = fopen("database/item_stock.txt", "w");
             if (!stock_fp) {
-                printf("Failed to update stock.\n");
+                printf("-> Failed to update stock.\n");
                 system("pause");
                 return;
             }
@@ -553,12 +567,12 @@ void confirm_order(const char *username) {
                     rewind(userfp);
                     fprintf(userfp, "%s,%d\n", uname, handled + 1);
                 } else {
-                    printf("Failed to read user data format.\n");
+                    printf("-> Failed to read user data format.\n");
                 }
 
                 fclose(userfp);
             } else {
-                printf("Failed to open user file for handled update.\n");
+                printf("-> Failed to open user file for handled update.\n");
                 system("pause");
             }
 
@@ -575,7 +589,7 @@ void confirm_order(const char *username) {
 void history(const char *username) {
     FILE *fp = fopen("database/history_transaction.txt", "r");
     if (!fp) {
-        printf("Failed to open history_transaction.txt\n");
+        printf("-> Failed to open history_transaction.txt\n");
         system("pause");
         return;
     }
@@ -662,7 +676,7 @@ void history(const char *username) {
     fclose(fp);
 
     if (count == 0) {
-        printf("No transactions found.\n");
+        printf("-> No transactions found.\n");
         system("pause");
         return;
     }
@@ -720,7 +734,7 @@ void history(const char *username) {
     apply_filters();
 
     if (filtered_count == 0) {
-        printf("No transactions matched your filter/search.\n");
+        printf("-> No transactions matched your filter/search.\n");
         system("pause");
         return;
     }

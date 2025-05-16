@@ -60,9 +60,8 @@ void leaderboard_menu(const char *username) {
 
     DIR *dir = opendir("database/profiles/user");
     if (!dir) {
-        printf("Gagal membuka folder profiles/user.\n");
-        printf("Tekan Enter untuk kembali...");
-        getchar(); getchar();
+        printf("-> Failed to open database/profiles/user.\n");
+        system("pause");
         return;
     }
 

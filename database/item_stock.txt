@@ -1,3 +1,2 @@
-1,Americano,0,15000
-2,Africano,20,10000
-3,Jawano,50,500
+5,torabika,0,5
+7,americano,45,5

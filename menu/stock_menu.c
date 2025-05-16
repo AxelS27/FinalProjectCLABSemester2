@@ -1,15 +1,18 @@
+//=====[[ C Library ]]=====
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+//=====[[ Custom Library ]]=====
 #include "../library/stock_menu.h"
 #include "../library/main_menu.h"
 
-// ini bstny bisa kamu edit propertynya terserah
-
+//=====[[ BST's Code ]]=====
 typedef struct Item {
     int id;
     char name[15];
     int price;
+    int stock;
 } Item;
 
 typedef struct Item_Node {
@@ -78,25 +81,158 @@ void in_order_items(Item_Node* root) {
     if (root == NULL) return;
 
     in_order_items(root->left);
-    printf("| %-4d | %-14s | %-6d |\n", root->data.id, root->data.name, root->data.price);
+    printf("| %-4d | %-14s | %-6d | %-6d |\n", root->data.id, root->data.name, root->data.price, root->data.stock);
     in_order_items(root->right);
 }
 
-// garap disini
-void stock_menu(){
+Item_Node* search_item(Item_Node* root, int id) {
+    if (!root) return NULL;
+    if (id == root->data.id) return root;
+    if (id < root->data.id) return search_item(root->left, id);
+    return search_item(root->right, id);
+}
+
+//=====[[ Procedure/Function ]]=====
+void save_stock_recursive(FILE* fp, Item_Node* root) {
+    if (!root) return;
+    save_stock_recursive(fp, root->left);
+    fprintf(fp, "%d,%s,%d,%d\n", root->data.id, root->data.name, root->data.stock, root->data.price);
+    save_stock_recursive(fp, root->right);
+}
+
+void save_stock_to_file(const char* filename) {
+    FILE* fp = fopen(filename, "w");
+    if (!fp) {
+        printf("Failed to save stock to file.\n");
+        return;
+    }
+    save_stock_recursive(fp, item_root);
+    fclose(fp);
+    printf("Stock saved successfully to %s.\n", filename);
+}
+
+void load_stock_from_file(const char* filename) {
+    FILE* fp = fopen(filename, "r");
+    if (!fp) {
+        printf("No stock file found, starting with empty data.\n");
+        return;
+    }
+
+    char line[100];
+    while (fgets(line, sizeof(line), fp)) {
+        Item item;
+        sscanf(line, "%d,%14[^,],%d,%d", &item.id, item.name, &item.stock, &item.price);
+        insert_item(&item_root, item);
+    }
+    fclose(fp);
+    printf("Stock loaded from %s.\n", filename);
+    system("pause");
+}
+
+void add_stock(){
+	system("cls");
+    Item newItem;
+  	printf("Enter item ID: ");
+   	scanf("%d", &newItem.id);
+	getchar();
+	printf("Enter item name: ");
+    scanf(" %[^\n]", newItem.name);
+    newItem.name[strcspn(newItem.name, "\n")] = '\0';
+    printf("Enter item price: ");
+    scanf("%d", &newItem.price);
+    printf("Enter item stock: ");
+    scanf("%d", &newItem.stock);
+
+	insert_item(&item_root, newItem);
+	save_stock_to_file("database/item_stock.txt");
+	system("pause");
+	
+}
+
+void remove_stock(){
+	system("cls");
+	load_stock_from_file("dataStock.txt");
+    int id;
+   	printf("Enter ID to remove: ");
+   	scanf("%d", &id);
+   	Item_Node* node = search_item(item_root, id);
+  	if (!node) {
+  	printf("Item not found.\n");
+   	} else{
+   		delete_item(&item_root, id);
+   		printf("Item removed.\n");
+	}
+	
+	save_stock_to_file("item_tock.txt");
+   	system("pause");	   	
+}
+
+void edit_stock(){
+	system("cls");
+	load_stock_from_file("item_stock.txt");
+	int id;
+    printf("Enter ID to edit: ");
+    scanf("%d", &id);
+
+    Item_Node* node = search_item(item_root, id);
+    if (!node) {
+       	printf("Item not found.\n");
+	} else {
+	    printf("Current Name: %s | Price: %d   |  Stock: %d\n", node->data.name, node->data.price, node->data.stock);
+	    printf("Enter new name (press enter to skip): ");
+	    getchar();
+	    char new_name[15];
+	    fgets(new_name, sizeof(new_name), stdin);
+	    if (strcmp(new_name, "\n") != 0) {
+		    new_name[strcspn(new_name, "\n")] = '\0';
+	        strcpy(node->data.name, new_name);
+	    }
+			
+		printf("Enter new price (-1 to skip): ");
+	    int new_price;
+	    scanf("%d", &new_price);
+	    if (new_price != -1) node->data.price = new_price;
+			        
+	    printf("Enter new stock (-1 to skip): ");
+	    int new_stock;
+	    scanf("%d", &new_stock);
+	    if (new_price != -1) node->data.stock = new_stock;
+			
+		save_stock_to_file("database/item_stock.txt");
+		printf("Item updated successfully.\n");
+	}
+	system("pause");
+}
+
+void view_stock(const char *username) {
+    system("cls");
+    load_stock_from_file("database/item_stock.txt");
+    printf("+------------------------------------------------+\n");
+    printf("| User: %-10s                               |\n", username); 
+    printf("|                   STOCK LIST                   |\n");
+    printf("+------------------------------------------------+\n");
+    printf("| ID   | Name           | Stock | Price  |\n");
+    printf("+------------------------------------------------+\n");
+    in_order_items(item_root);
+    printf("+------------------------------------------------+\n");
+    system("pause");
+}
+
+void stock_menu(const char *username){
     int choice;
 
     while (1) {
-        system("clear");
+        system("cls");
         printf("+------------------------------------------------+\n");
+        printf("| User: %-10s                               |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|              Stock Management Menu             |\n");
         printf("|------------------------------------------------|\n");
         printf("|                                                |\n");
-        printf("| [1] Add stock                                  |\n"); // nanti file stockny bisa di edit di database/stock.txt stylenya tar csv
-        printf("| [2] Remove Stock                               |\n"); // contoh 001,americano,15,15000
-        printf("|                                                |\n"); // (id,name,stock,price)
-        printf("| [3] Edit item's property                       |\n"); // editny properti dari item (name,price bisa diganti)
+        printf("| [1] Add stock                                  |\n");
+        printf("| [2] Remove Stock                               |\n");
+        printf("|                                                |\n");
+        printf("| [3] Edit item's property                       |\n");
         printf("|                                                |\n");
         printf("| [0] Back                                       |\n");
     	printf("|                                                |\n");
@@ -109,23 +245,19 @@ void stock_menu(){
 
         switch (choice) {
         	case 1:
-        		// add_stock()
+        		add_stock();
         		break;
         	case 2:
-        		// remove_stock();
+				remove_stock();
         		break;
         	case 3:
-        		// edit_stock();
+        		edit_stock();
         		break;
         	case 0:
         		printf("Loading main menu...\n\n");
         		system("pause");
-        		main_menu();
+        		main_menu(username);
         		break;
         }
     }
-}
-
-void view_stock(){
-    // buat tabel display stock	
 }

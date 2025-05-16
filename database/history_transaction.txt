@@ -10,3 +10,6 @@ Americano/5/15000,notmember, diskon:0
 Americano/5/15000,notmember, diskon:0
 Americano/5/15000,notmember, diskon:0
 Americano/5/15000,asdasd, diskon:0
+torabika/5/5,notmember, diskon:0
+torabika/500/5,notmember, diskon:0
+americano/5/5,notmember, diskon:0

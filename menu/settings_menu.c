@@ -93,14 +93,14 @@ void set_background_color(UserProfile *profile) {
             break;
         }
         if (bg_color < 0 || bg_color > 7) {
-            printf("Invalid color code.\n");
+            printf("->Invalid color code.\n");
             system("pause");
             continue;
         }
 
         profile->bg_color = bg_color;
         apply_color(profile->bg_color, profile->text_color);
-        printf("Background color changed!\n");
+        printf("-> Background color changed!\n");
         
 		system("pause");
 
@@ -134,14 +134,14 @@ void set_text_color(UserProfile *profile) {
             break;
         }
         if (text_color < 0 || text_color > 7) {
-            printf("  >> Invalid color code.\n");
+            printf("-> Invalid color code.\n");
             system("pause");
             continue;
         }
 
         profile->text_color = text_color;
         apply_color(profile->bg_color, profile->text_color);
-        printf("  >>Text color changed!\n");
+        printf("-> Text color changed!\n");
         
 		system("pause");
 
@@ -153,7 +153,7 @@ void delete_account(const char *username) {
     FILE *file = fopen("database/authentication.bin", "rb");
     FILE *temp = fopen("database/auth_temp.bin", "wb");
     if (!file || !temp) {
-        printf("Failed to open files.\n");
+        printf("-> Failed to open files.\n");
         if (file) fclose(file);
         if (temp) fclose(temp);
         return;
@@ -243,17 +243,17 @@ void settings_menu(const char *username) {
 
             if (confirm == 'y' || confirm == 'Y') {
                 delete_account(username);
-                printf("  >> Account deleted. Exiting program.\n");
+                printf("-> Account deleted. Exiting program.\n");
                 exit(0);
             } else {
-                printf("  >> Account deletion canceled.\n");
+                printf("-> Account deletion canceled.\n");
                 system("pause");
             }
         } else if (choice == 0) {
             printf("\033[0m");
             break;
         } else {
-            printf("  >> Invalid choice.\n");
+            printf("-> Invalid choice.\n");
             system("pause");
         }
     }

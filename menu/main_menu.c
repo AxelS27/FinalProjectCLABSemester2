@@ -52,8 +52,14 @@ void main_menu(const char *username){
 
         switch (choice) {
             case 1:
+            	printf("Loading stock menu...\n\n");
+            	system("pause");
+            	stock_menu(username);
                 break;
             case 2:
+            	printf("Loading view stock menu...\n\n");
+            	system("pause");
+            	view_stock(username);
                 break;
             case 3:
             	printf("Loading cashier menu...\n\n");
