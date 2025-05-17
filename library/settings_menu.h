@@ -7,6 +7,8 @@ typedef struct {
     int text_color;
 } UserProfile;
 
+extern UserProfile profile;
+
 int load_user_profile(const char *username, UserProfile *profile);
 void apply_color();
 void settings_menu(const char *username);

@@ -86,7 +86,7 @@ void leaderboard_menu(const char *username) {
 
     while (1) {
         sort_leaderboard(entries, count, sort_desc);
-        system("clear");
+        system("cls");
 
         printf("+---------------------------------------+\n");
         printf("| User: %-10s                      |\n", username);

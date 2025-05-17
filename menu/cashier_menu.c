@@ -32,7 +32,7 @@ void create_member(const char *username);
 void cashier_menu(const char *username) {
     int choice;
     while (1) {
-        system("cls");
+		system("cls");
         printf("+------------------------------------------------+\n");
         printf("| User: %-10s                               |\n", username);
         printf("|                 STOCK UP CAFFEE                |\n");

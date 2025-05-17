@@ -209,6 +209,14 @@ void settings_menu(const char *username) {
 
     while (1) {
         system("cls");
+        if (!load_user_profile(username, &profile)) {
+		    strcpy(profile.username, username);
+		    profile.customer_handled = 0;
+		    profile.bg_color = 0;
+		    profile.text_color = 7;
+	    }
+	    
+		apply_color(profile.bg_color, profile.text_color);
         apply_color(profile.bg_color, profile.text_color);
         printf("+------------------------------------------------+\n");
         printf("| User: %-10s                               |\n", profile.username);
