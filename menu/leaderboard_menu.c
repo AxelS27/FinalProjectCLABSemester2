@@ -89,7 +89,7 @@ void leaderboard_menu(const char *username) {
         system("cls");
 
         printf("+---------------------------------------+\n");
-        printf("| User: %-10s                      |\n", username);
+        printf("| User: %-28s                      |\n", username);
         printf("|             LEADERBOARD               |\n");
         printf("+---------------------------------------+\n");
         printf("| Rank | Username       | Customers     |\n");

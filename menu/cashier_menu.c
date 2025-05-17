@@ -34,7 +34,7 @@ void cashier_menu(const char *username) {
     while (1) {
 		system("cls");
         printf("+------------------------------------------------+\n");
-        printf("| User: %-10s                               |\n", username);
+        printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|                  Cashier Menu                  |\n");
         printf("|------------------------------------------------|\n");
@@ -72,7 +72,7 @@ void order(const char *username){
 	while (1) {
         system("cls");
         printf("+------------------------------------------------+\n");
-    	printf("| User: %-10s                               |\n", username);
+    	printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|                   Order Menu                   |\n");
         printf("|------------------------------------------------|\n");
@@ -121,7 +121,7 @@ void add_item(const char *username) {
 
     system("cls");
     printf("+------------------------------------------------+\n");
-    printf("| User: %-10s                                    |\n", username);
+    printf("| User: %-40s |\n", username); 
     printf("|                 STOCK UP CAFFEE                |\n");
     printf("|                  Add Item Menu                 |\n");
     printf("|------------------------------------------------|\n");
@@ -201,7 +201,7 @@ void remove_item(const char *username) {
 
     system("cls");
     printf("+------------------------------------------------+\n");
-    printf("| User: %-10s                                    |\n", username);
+    printf("| User: %-40s |\n", username); 
     printf("|                 STOCK UP CAFFEE                |\n");
     printf("|                 Remove Item Menu               |\n");
     printf("|------------------------------------------------|\n");
@@ -236,7 +236,7 @@ void member(const char *username){
 	while (1) {
         system("cls");
         printf("+------------------------------------------------+\n");
-        printf("| User: %-10s                                    |\n", username);
+        printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|                  Member Menu                   |\n");
         printf("|------------------------------------------------|\n");
@@ -281,7 +281,7 @@ void already_member(const char *username) {
     }
 
     printf("+------------------------------------------------+\n");
-    printf("| User: %-10s                                    |\n", username);
+    printf("| User: %-40s |\n", username); 
     printf("|               Already Member Menu              |\n");
     printf("+------------------------------------------------+\n");
     printf("  No Handphone : ");
@@ -321,7 +321,7 @@ void create_member(const char *username) {
     FILE *fp;
 
     printf("+------------------------------------------------+\n");
-    printf("| User: %-10s                                    |\n", username);
+    printf("| User: %-40s |\n", username); 
     printf("|                Create Member Menu              |\n");
     printf("+------------------------------------------------+\n");
 
@@ -413,7 +413,7 @@ void confirm_order(const char *username) {
     system("cls");
     while (1) {
         printf("+------------------------------------------------+\n");
-        printf("| User: %-10s                                    |\n", username);
+        printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|                Confirm Order Menu              |\n");
         printf("+------------------------------------------------+\n");

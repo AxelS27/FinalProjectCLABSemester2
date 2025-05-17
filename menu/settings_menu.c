@@ -219,7 +219,7 @@ void settings_menu(const char *username) {
 		apply_color(profile.bg_color, profile.text_color);
         apply_color(profile.bg_color, profile.text_color);
         printf("+------------------------------------------------+\n");
-        printf("| User: %-10s                               |\n", profile.username);
+        printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
         printf("|        Inventory Management System (BST)       |\n");
         printf("|------------------------------------------------|\n");
