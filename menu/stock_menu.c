@@ -81,7 +81,7 @@ void delete_item(Item_Node** root, int id) {
 void in_order_items(Item_Node* root) {
     if (root == NULL) return;
     in_order_items(root->left);
-    printf("| %-4d | %-14s | %-8d | %-11d |\n", root->data.id, root->data.name, root->data.price, root->data.stock);
+    printf("| %-4d | %-14s | %-8d | %-11d |\n", root->data.id, root->data.name, root->data.stock, root->data.price);
     in_order_items(root->right);
 }
 

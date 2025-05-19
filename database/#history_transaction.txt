@@ -1,0 +1,72 @@
+Americano/7/30000,French Fries/3/30000,Mocha/5/40000,Zaki, diskon:0
+Latte/50/35000,notmember, diskon:0
+Americano/20/30000,Zaki, diskon:320000
+Espresso/10/25000,Green Tea/5/28000,Michael, diskon:25000
+Chicken Sandwich/15/35000,Chocolate Cake/3/45000,Alice, diskon:45000
+Vanilla Ice Cream/12/30000,Mango Juice/10/28000,Kairi, diskon:0
+Strawberry Smoothie/8/32000,Cappuccino/4/35000,Jemkin, diskon:0
+Orange Juice/15/28000,Zaki, diskon:84000
+Grilled Cheese/10/35000,f0rsaken, diskon:0
+Cheesecake/5/45000,Trailblazer, diskon:45000
+Americano/3/30000,Espresso/7/25000,Arnold, diskon:0
+French Fries/20/30000,Michael, diskon:60000
+Mocha/10/40000,Florescent, diskon:0
+Green Tea/7/28000,Vitamin, diskon:0
+Chocolate Cake/6/45000,Orange Juice/8/28000,Zaki, diskon:135000
+Latte/15/35000,Vanilla Ice Cream/5/30000,Alice, diskon:0
+Chicken Sandwich/10/35000,Kairi, diskon:35000
+Strawberry Smoothie/20/32000,Florescent, diskon:64000
+Grilled Cheese/7/35000,Jemkin, diskon:0
+Cheesecake/8/45000,Arnold, diskon:90000
+Americano/5/30000,Zaki, diskon:75000
+Espresso/12/25000,Michael, diskon:0
+Mocha/7/40000,Vitamin, diskon:0
+Green Tea/10/28000,Alice, diskon:28000
+Chocolate Cake/3/45000,Trailblazer, diskon:0
+French Fries/15/30000,Kairi, diskon:0
+Chicken Sandwich/8/35000,Jemkin, diskon:0
+Vanilla Ice Cream/20/30000,Arnold, diskon:0
+Mango Juice/25/28000,Florescent, diskon:70000
+Strawberry Smoothie/10/32000,Zaki, diskon:32000
+Orange Juice/12/28000,Michael, diskon:33600
+Grilled Cheese/15/35000,Vitamin, diskon:0
+Cheesecake/10/45000,Alice, diskon:0
+Americano/8/30000,Jemkin, diskon:0
+Espresso/5/25000,Trailblazer, diskon:0
+Mocha/6/40000,Arnold, diskon:0
+Green Tea/9/28000,Kairi, diskon:0
+Chocolate Cake/7/45000,Florescent, diskon:0
+French Fries/18/30000,Zaki, diskon:54000
+Chicken Sandwich/10/35000,Michael, diskon:35000
+Vanilla Ice Cream/7/30000,Vitamin, diskon:0
+Mango Juice/15/28000,Alice, diskon:0
+Strawberry Smoothie/8/32000,Jemkin, diskon:0
+Orange Juice/9/28000,Arnold, diskon:0
+Grilled Cheese/5/35000,Trailblazer, diskon:0
+Cheesecake/12/45000,Kairi, diskon:0
+Americano/10/30000,Florescent, diskon:0
+Espresso/15/25000,Zaki, diskon:0
+Mocha/4/40000,Michael, diskon:0
+Green Tea/6/28000,Alice, diskon:0
+Chocolate Cake/8/45000,Jemkin, diskon:0
+French Fries/20/30000,Arnold, diskon:60000
+Chicken Sandwich/7/35000,Vitamin, diskon:0
+Vanilla Ice Cream/10/30000,Kairi, diskon:0
+Mango Juice/18/28000,Florescent, diskon:0
+Strawberry Smoothie/12/32000,Zaki, diskon:0
+Orange Juice/14/28000,Michael, diskon:0
+Grilled Cheese/11/35000,Alice, diskon:0
+Cheesecake/9/45000,Trailblazer, diskon:0
+Americano/6/30000,Jemkin, diskon:0
+Espresso/9/25000,Arnold, diskon:0
+Mocha/11/40000,Kairi, diskon:0
+Green Tea/8/28000,Florescent, diskon:0
+Chocolate Cake/10/45000,Zaki, diskon:0
+French Fries/13/30000,Michael, diskon:0
+Chicken Sandwich/5/35000,Alice, diskon:0
+Vanilla Ice Cream/14/30000,Jemkin, diskon:0
+Mango Juice/9/28000,Arnold, diskon:0
+Strawberry Smoothie/7/32000,Trailblazer, diskon:0
+Orange Juice/6/28000,Kairi, diskon:0
+Grilled Cheese/9/35000,Florescent, diskon:0
+Cheesecake/4/45000,Zaki, diskon:0

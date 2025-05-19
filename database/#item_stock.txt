@@ -1,0 +1,15 @@
+1,Americano,268,30000
+2,Espresso,250,25000
+3,Latte,150,35000
+4,Cappuccino,200,35000
+5,Mocha,175,40000
+6,Green Tea,150,28000
+7,Chocolate Cake,100,45000
+8,Cheesecake,100,45000
+9,French Fries,247,30000
+10,Chicken Sandwich,220,35000
+11,Vanilla Ice Cream,150,30000
+12,Mango Juice,200,28000
+13,Strawberry Smoothie,180,32000
+14,Orange Juice,195,28000
+15,Grilled Cheese,190,35000

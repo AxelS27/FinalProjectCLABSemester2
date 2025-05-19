@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 
 //=====[[ Custom Library ]]=====
 #include "../library/main_menu.h"
@@ -85,6 +86,10 @@ void main_menu(const char *username){
                 printf("Data successfully stored. Exiting...\n\n");
                 system("pause");
                 printf("\033[0m");
+                system("cls");
+                printf("EXITING APP...\n");
+                Sleep(3000);
+                system("cls");
                 exit(0);
                 break;
         }

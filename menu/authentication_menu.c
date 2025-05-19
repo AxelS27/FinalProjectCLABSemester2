@@ -1,7 +1,8 @@
 //=====[[ C Library ]]=====
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <windows.h>
 
 //=====[[ Custom Library ]]=====
 #include "../library/authentication_menu.h"
@@ -208,7 +209,10 @@ void authentication_menu() {
             authentication_menu();
         }
     } else if (choice == 0) {
-        printf("Good bye !.\n");
+        system("cls");
+        printf("EXITING APP...\n");
+        Sleep(3000);
+        system("cls");
         exit(0);
     }
 }

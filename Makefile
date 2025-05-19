@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -Ilibrary
-SRC = $(wildcard *.c menu/*.c)
+SRC = $(wildcard *.c menu/*.c sound/*.c)
 OBJ = $(SRC:.c=.o)
 EXE = main.exe
 

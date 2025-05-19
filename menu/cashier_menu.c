@@ -33,6 +33,11 @@ void cashier_menu(const char *username) {
     int choice;
     while (1) {
 		system("cls");
+		
+		is_member = false;
+		strcpy(member_name, "notmember");
+		member_points = 0;
+	
         printf("+------------------------------------------------+\n");
         printf("| User: %-40s |\n", username); 
         printf("|                 STOCK UP CAFFEE                |\n");
@@ -341,7 +346,7 @@ void create_member(const char *username) {
             }
 
             if (!valid) {
-                printf("  -> Name must be 3–10 characters and contain no spaces.\n");
+                printf("-> Name must be 3–10 characters and contain no spaces.\n");
             } else {
                 break;
             }
@@ -560,15 +565,16 @@ void confirm_order(const char *username) {
 
             FILE *userfp = fopen(path, "r+");
             if (userfp) {
-                char uname[50];
-                int handled;
+				char uname[50];
+				int handled, bg_color, text_color; 
+				
+				if (fscanf(userfp, "%[^,],%d,%d,%d", uname, &handled, &bg_color, &text_color) == 4) {
+				    rewind(userfp);
+				    fprintf(userfp, "%s,%d,%d,%d\n", uname, handled + 1, bg_color, text_color);
+				} else {
+				    printf("-> Failed to read full user data format.\n");
+				}
 
-                if (fscanf(userfp, "%[^,],%d", uname, &handled) == 2) {
-                    rewind(userfp);
-                    fprintf(userfp, "%s,%d\n", uname, handled + 1);
-                } else {
-                    printf("-> Failed to read user data format.\n");
-                }
 
                 fclose(userfp);
             } else {
