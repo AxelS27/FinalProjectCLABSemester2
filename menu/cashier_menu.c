@@ -556,7 +556,7 @@ void confirm_order(const char *username) {
                         }
                     }
                 }
-                fprintf(hist, "%s, diskon:%d\n", member_name, discount);
+                fprintf(hist, "%s,diskon:%d\n", member_name, discount);
                 fclose(hist);
             }
 
@@ -615,47 +615,45 @@ void history(const char *username) {
     int count = 0;
     char line[512];
 
-	void parse_transaction_line(char *line, Transaction *t) {
-	    t->item_count = 0;
-	    t->discount = 0;
-	    t->total = 0;
-	    t->member_name[0] = '\0';
-	    
-	    char *discount_ptr = strstr(line, ", diskon:");
-	    if (!discount_ptr) return;
-	
-	    *discount_ptr = '\0';
-	    discount_ptr += 8;
-	    t->discount = atoi(discount_ptr);
+    void parse_transaction_line(char *line, Transaction *t) {
+        t->item_count = 0;
+        t->discount = 0;
+        t->total = 0;
+        t->member_name[0] = '\0';
 
-	    char *tokens[20];
-	    int token_count = 0;
-	    char *token = strtok(line, ",");
-	    while (token != NULL && token_count < 20) {
-	        while (*token == ' ') token++;
-	
-	        tokens[token_count++] = token;
-	        token = strtok(NULL, ",");
-	    }
-	
-	    if (token_count == 0) return;
-	
-	    strcpy(t->member_name, tokens[token_count - 1]);
-	
-	    for (int i = 0; i < token_count - 1 && i < 10; i++) {
-	        int qty = 0, price = 0;
-	        char item_name[50] = {0};
-	
-	        if (sscanf(tokens[i], "%[^/]/%d/%d", item_name, &qty, &price) == 3) {
-	            strcpy(t->items[t->item_count], item_name);
-	            t->item_qty[t->item_count] = qty;
-	            t->item_price[t->item_count] = price;
-	            t->total += qty * price;
-	            t->item_count++;
-	        }
-	    }
-	}
+        char *discount_ptr = strstr(line, ",diskon:");
+        if (!discount_ptr) return;
 
+        *discount_ptr = '\0';
+        discount_ptr += 8;
+        t->discount = atoi(discount_ptr);
+
+        char *tokens[20];
+        int token_count = 0;
+        char *token = strtok(line, ",");
+        while (token != NULL && token_count < 20) {
+            while (*token == ' ') token++;
+            tokens[token_count++] = token;
+            token = strtok(NULL, ",");
+        }
+
+        if (token_count == 0) return;
+
+        strcpy(t->member_name, tokens[token_count - 1]);
+
+        for (int i = 0; i < token_count - 1 && i < 10; i++) {
+            int qty = 0, price = 0;
+            char item_name[50] = {0};
+
+            if (sscanf(tokens[i], "%[^/]/%d/%d", item_name, &qty, &price) == 3) {
+                strcpy(t->items[t->item_count], item_name);
+                t->item_qty[t->item_count] = qty;
+                t->item_price[t->item_count] = price;
+                t->total += qty * price;
+                t->item_count++;
+            }
+        }
+    }
 
     void print_transaction_table(Transaction *t, int index) {
         printf("\n\n\n\n+------------------------------------------------+\n");
@@ -704,7 +702,7 @@ void history(const char *username) {
     int search_id = 0;
 
     int matches_filter(Transaction *t) {
-        if (filter_member_only && t->member_name[0] == '\0') return 0;
+        if (filter_member_only && strcmp(t->member_name, "notmember") == 0) return 0;
 
         if (filter_total_cmp == 1 && (t->total - t->discount) <= filter_total_value) return 0;
         if (filter_total_cmp == 2 && (t->total - t->discount) >= filter_total_value) return 0;
@@ -713,12 +711,15 @@ void history(const char *username) {
 
         if (search_member[0] != '\0') {
             char member_lower[50], search_lower[50];
-            for (int i = 0; t->member_name[i]; i++)
+            int i;
+            for (i = 0; t->member_name[i]; i++)
                 member_lower[i] = tolower(t->member_name[i]);
-            member_lower[strlen(t->member_name)] = 0;
-            for (int i = 0; search_member[i]; i++)
+            member_lower[i] = '\0';
+
+            for (i = 0; search_member[i]; i++)
                 search_lower[i] = tolower(search_member[i]);
-            search_lower[strlen(search_member)] = 0;
+            search_lower[i] = '\0';
+
             if (!strstr(member_lower, search_lower)) return 0;
         }
 
@@ -768,7 +769,7 @@ void history(const char *username) {
         for (int i = start; i < end; i++) {
             print_transaction_table(&filtered[i], filtered[i].id);
         }
-		
+
         printf("\n+=======================================+\nPage %d of %d\n", page + 1, max_page);
         printf("\n[1] Previous\n[2] Next\n\n[3] Set Sort/Filter/Search\n\n[0] Back\n+=======================================+\n");
         printf(">>");
@@ -824,35 +825,31 @@ void history(const char *username) {
                         filter_total_cmp = 0;
                         filter_total_value = 0;
                     }
-            } else if (filter_option == 3) {
-                printf("Enter Transaction ID (0 to cancel): ");
-                int id;
-                if (scanf("%d", &id) != 1) {
+                } else if (filter_option == 3) {
+                    printf("Enter Transaction ID (0 to cancel): ");
+                    int id;
+                    if (scanf("%d", &id) != 1) {
+                        while(getchar() != '\n');
+                        id = 0;
+                    }
                     while(getchar() != '\n');
-                    id = 0;
+                    search_id = id;
+                } else if (filter_option == 4) {
+                    printf("Enter Member Name to search (empty to clear): ");
+                    fgets(search_member, sizeof(search_member), stdin);
+                    search_member[strcspn(search_member, "\r\n")] = 0;
+                } else if (filter_option == 5) {
+                    filter_member_only = 0;
+                    filter_total_cmp = 0;
+                    filter_total_value = 0;
+                    search_id = 0;
+                    search_member[0] = '\0';
                 }
-                while(getchar() != '\n');
-                search_id = id;
-            } else if (filter_option == 4) {
-                printf("Enter Member Name to search (empty to clear): ");
-                fgets(search_member, sizeof(search_member), stdin);
-                search_member[strcspn(search_member, "\r\n")] = 0;
-            } else if (filter_option == 5) {
-                filter_member_only = 0;
-                filter_total_cmp = 0;
-                filter_total_value = 0;
-                search_id = 0;
-                search_member[0] = '\0';
-            }
-        } while (filter_option != 0);
+            } while (filter_option != 0);
 
-        apply_filters();
-        filtered_count = 0;
-        for (int i = 0; i < count; i++) {
-            if (matches_filter(&transactions[i])) {
-                filtered[filtered_count++] = transactions[i];
-            }
+            apply_filters();
+            max_page = (filtered_count + items_per_page - 1) / items_per_page;
+            page = 0;
         }
-        max_page = (filtered_count + items_per_page - 1) / items_per_page;
-        page = 0;
-}}}
+    }
+}
