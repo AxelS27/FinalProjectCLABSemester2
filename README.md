@@ -4,7 +4,7 @@ This project is a comprehensive application named Stock Up Caffee designed to ef
 
 Key features include:
 
-Inventory Management: Keep real-time data on stock availability.
+Inventory Management: Keep real-time data on stock availability using BST Algorithm.
 
 Cashier System: Handle customer orders and payments.
 

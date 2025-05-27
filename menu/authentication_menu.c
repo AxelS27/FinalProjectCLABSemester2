@@ -171,7 +171,7 @@ void authentication_menu() {
     while (1) {
         system("cls");
         printf("+------------------------------------------------+\n");
-        printf("|                STOCK UP CAFE                   |\n");
+        printf("|               STOCK UP CAFFEE                  |\n");
         printf("|------------------------------------------------|\n");
         printf("|                                                |\n");
         printf("| [1] Login                                      |\n");
